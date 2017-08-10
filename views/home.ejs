@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>RestaurantGo || Find Food and Friends</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel = "stylesheet" href = "css/home.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://use.fontawesome.com/4d0a503a2b.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyD2MkC1sfePDl__0dvHQudZL2r42EmP9Dk",
+        authDomain: "food-project-ebea1.firebaseapp.com",
+        databaseURL: "https://food-project-ebea1.firebaseio.com",
+        projectId: "food-project-ebea1",
+        storageBucket: "food-project-ebea1.appspot.com",
+        messagingSenderId: "373070343577"
+      };
+      firebase.initializeApp(config);
+    </script>
+    
+    <style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+    .myLink {display: none}
+    </style>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 90%;
+        margin: 200;
+        padding: 10;
+      }
+    </style>
+</head>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div class="w3-bar w3-white w3-border-bottom w3-xlarge">
+  <a  data-toggle="modal" data-target="#login-modal" class="w3-bar-item w3-button w3-text-red w3-hover-white"><b><img id = "burger" src = "http://inspiredflavor.com/img/icons/insights/icon-burger-red.png" height = "40px" ></b></a>
+  <a href="#" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey"><i class="fa fa-search"></i></a>
+  <a href="/calendar" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+  <a href="/budgeting" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-grey"><i class="fa fa-usd" aria-hidden="true"></i></a>
+  
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    	<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" align="center">
+					<!--<img class="img-circle" id="img_logo" src="http://bootsnipp.com/img/logo.jpg">-->
+					<i class="fa fa-cutlery fa-3x" aria-hidden="true"></i>
+					<h2 id= "login-heading">Log in to start sharing!</h2>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span><i class="fa fa-times" aria-hidden="true"></i></span>
+					</button>
+				</div>
+                
+                <!-- Begin # DIV Form -->
+                <div id="div-forms">
+                
+                    <!-- Begin # Login Form -->
+                    <form id="login-form">
+		                <div class="modal-body">
+		                    <center><button id= "google-signin" type = "button" onclick = {signInWithGoogle()} class = "btn btn-danger btn-lg"><i class="fa fa-google" aria-hidden="true"></i>&nbsp Sign In with Google</button></center>
+				    		<input  id="login_username" class="form-control" type="text" placeholder="Email" required>
+				    		<input id="login_password" class="form-control" type="password" placeholder="Password" required>
+				    		<center><button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button></center>
+				    		<br/>
+                            <center><div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> &nbsp  Remember me
+                                </label>
+                            </div></center>
+        		    	</div>
+				        <div class="modal-footer">
+                            <div>
+                                <button id = "login-button" type="submit" class="btn btn-primary btn-lg">Log In</button>
+                               
+                            </div>
+				    	    <div>
+                               <center><button id="login_register_btn" type="button" class="btn btn-link"><font size = "2">Not a member? Register for free.</font></button>  
+                                </center>
+                            </div>
+				        </div>
+                    </form>
+                    <!-- End # Login Form -->
+                    
+                    <!-- Begin | Lost Password Form -->
+                    <form id="lost-form" style="display:none;">
+    	    		    <div class="modal-body">
+		    				<div id="div-lost-msg">
+                                &nbsp
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp
+                                <span id="text-lost-msg"><font size = "2">Type your email below to reset your password</font></span>
+                            </div>
+		    				<input id="lost_email" class="form-control" type="text" placeholder="Email" required>
+            			</div>
+		    		    <div class="modal-footer">
+                            <div>
+                                <button id= "send-button" type="submit" class="btn btn-primary btn-lg">Send</button>
+                            </div>
+                            <div>
+                                <button id="lost_login_btn" type="button" class="btn btn-link">Never mind, I remember it now</button>
+                            </div>
+		    		    </div>
+                    </form>
+                    <!-- End | Lost Password Form -->
+                    
+                    <!-- Begin | Register Form -->
+                    <form id="register-form" style="display:none;">
+            		    <div class="modal-body">
+		    				<div id="div-register-msg">
+		    				    &nbsp
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp
+                                <span id="text-register-msg"><font sixe ="3">Register below to RestaurantGo!</font></span>
+                            </div>
+		    				<input id="register_username" class="form-control" type="text" placeholder="Your Full Name" required>
+                            <input id="register_email" class="form-control" type="text" placeholder="Email" required>
+                            <input id="register_password" class="form-control" type="password" placeholder="Password" required>
+                            <input id="register_confirmpassword" class="form-control" type="password" placeholder="Confirm Password" required>
+            			</div>
+		    		    <div class="modal-footer">
+                            <div>
+                                <center><button id = "register-button" type="submit" class="btn btn-primary btn-lg">Register</button></center>
+                            </div>
+                            <div>
+                                <center><button id="register_login_btn" type="button" class="btn btn-link">Log In Instead</button></center>
+                               
+                            </div>
+		    		    </div>
+                    </form>
+                    <!-- End | Register Form -->
+                    
+                </div>
+                <!-- End # DIV Form -->
+                
+			</div>
+		</div>
+	</div>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+  <img class="w3-image" src="images/home.png" alt="Sharing Food" width="1500" height="700">
+  <div class="w3-display-middle" style="width:65%">
+    <div class="w3-bar w3-black">
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Flight');"><i class="fa fa-cutlery w3-margin-right"></i>Discover Food</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Hotel');"><i class="fa fa-users w3-margin-right"></i>Make Friends</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Car');"><i class="fa fa-usd w3-margin-right"></i>Keep Track</button>
+    </div>
+
+    <!-- Tabs -->
+    <div id="Flight" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Find Nearby Restaurants/Cafes</h3>
+      <br/>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+         <div >
+          <label class= "tabheads">Based on Your Current Location:</label>
+          <input id = "geolocationfood" class="w3-input w3-border" type="text" placeholder="Search by resturant name, cuisine, or even by food name">
+        </div>
+        <br/><br/>
+        <p class = "tabheads">Based on a Location You Choose:</p>
+        <div class="w3-half">
+          <label class= "tabheads">Your Chosen Location</label>
+          <input id = "chosenlocation" class="w3-input w3-border" type="text" placeholder="e.g.: Times Square, Jackson Heights, Riverdale">
+        </div>
+        <div class="w3-half">
+          <label>&nbsp Restaurant/Cuisine Name</label>
+          <input "chosenlocationfood" class="w3-input w3-border" type="text" placeholder="Search by resturant name, cuisine, or even by food name">
+        </div>
+      </div>
+      <br/>
+      <p><button type = "button" id = "submitButton" class="w3-button btn btn-primary">Search and find dates</button></p>
+    </div>
+
+    <div id="Hotel" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Find the best hotels</h3>
+      <p>Book a hotel with us and get the best fares and promotions.</p>
+      <p>We know hotels - we know comfort.</p>
+      <p><button class="w3-button w3-dark-grey">Search Hotels</button></p>
+    </div>
+
+    <div id="Car" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Best car rental in the world!</h3>
+      <p><span class="w3-tag w3-deep-orange">DISCOUNT!</span> Special offer if you book today: 25% off anywhere in the world with CarServiceRentalRUs</p>
+      <input class="w3-input w3-border" type="text" placeholder="Pick-up point">
+      <p><button class="w3-button w3-dark-grey">Search Availability</button></p>
+    </div>
+  </div>
+</header>
+
+<div id='map'></div>
+
+<script>
+    var pos
+    var map, infoWindow;
+    
+
+    function initMap() {
+          map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 15
+          });
+          infoWindow = new google.maps.InfoWindow;
+          // Try HTML5 geolocation.
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+
+              var marker = new google.maps.Marker({
+                position: pos,
+                title: 'you',
+                map: map
+              });
+            //  document.getElementById('sharelocationbutton').onclick = function(){
+            //   shareLocation(pos.lat, pos.lng) 
+            //  }
+              map.setCenter(pos);
+              marker.setMap(map);
+
+              document.getElementById('submitButton').onclick = function() {getStoreLocation()}
+             
+ 
+            }, function() {
+              handleLocationError(true, infoWindow, map.getCenter());
+            });
+            
+          } else {
+            // Browser doesn’t support Geolocation
+            handleLocationError(false, infoWindow, map.getCenter());
+          }
+          
+          
+        }
+ 
+       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(browserHasGeolocation ?
+                                'Error: The Geolocation service failed.' :
+                                'Error: Your browser doesn\‘t support geolocation.');
+          infoWindow.open(map);
+        }
+        
+      function getStoreLocation(){
+            
+              if ( document.getElementById('geolocationfood').value !== ''){
+                var input = document.getElementById('geolocationfood').value
+              }
+              console.log(input)
+              
+              $('html, body').animate({
+                  scrollTop: $("#map").offset().top
+              }, 2000);
+              var apiKey = 'AIzaSyDUWTdknyhqy6iOYA4y8zbR6FJN_tamIaA'
+              var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${pos.lat},${pos.lng}&radius=500&keyword=${input}&key=${apiKey}`              
+            
+              fetch(url)
+              .then(function(data){
+                return data.json()
+            //to actually get the data and not the promise, write above and below
+              })
+              .then(function(json){
+                console.log(json)
+                var locationArray = json.results
+                console.log(locationArray)
+                for (i=0; i< locationArray.length; i++) {
+                  var latitudeOfInput_i = json.results[i].geometry.location.lat
+                  var longitudeOfInput_i = json.results[i].geometry.location.lng
+                  var pos_i = {
+                    lat: latitudeOfInput_i,
+                    lng: longitudeOfInput_i
+                  };
+                  var marker_i = new google.maps.Marker({
+                    position: pos_i,
+                    map: map
+                  });
+                }
+              })
+      }
+</script>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:1100px;">
+    
+  <!-- Good offers -->
+  <div class="w3-container w3-margin-top">
+    <h3>Good Offers Right Now</h3>
+    <h6>Up to <strong>50%</strong> discount.</h6>
+  </div>
+  <div class="w3-row-padding w3-text-white w3-large">
+    <div class="w3-half w3-margin-bottom">
+      <div class="w3-display-container">
+        <img src="/w3images/cinqueterre.jpg" alt="Cinque Terre" style="width:100%">
+        <span class="w3-display-bottomleft w3-padding">Cinque Terre</span>
+      </div>
+    </div>
+    <div class="w3-half">
+      <div class="w3-row-padding" style="margin:0 -16px">
+        <div class="w3-half w3-margin-bottom">
+          <div class="w3-display-container">
+            <img src="/w3images/newyork2.jpg" alt="New York" style="width:100%">
+            <span class="w3-display-bottomleft w3-padding">New York</span>
+          </div>
+        </div>
+        <div class="w3-half w3-margin-bottom">
+          <div class="w3-display-container">
+            <img src="/w3images/sanfran.jpg" alt="San Francisco" style="width:100%">
+            <span class="w3-display-bottomleft w3-padding">San Francisco</span>
+          </div>
+        </div>
+      </div>
+      <div class="w3-row-padding" style="margin:0 -16px">
+        <div class="w3-half w3-margin-bottom">
+          <div class="w3-display-container">
+            <img src="/w3images/pisa.jpg" alt="Pisa" style="width:100%">
+            <span class="w3-display-bottomleft w3-padding">Pisa</span>
+          </div>
+        </div>
+        <div class="w3-half w3-margin-bottom">
+          <div class="w3-display-container">
+            <img src="/w3images/paris.jpg" alt="Paris" style="width:100%">
+            <span class="w3-display-bottomleft w3-padding">Paris</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Explore Nature -->
+  <div class="w3-container">
+    <h3>Explore Nature</h3>
+    <p>Travel with us and see nature at its finest.</p>
+  </div>
+  <div class="w3-row-padding">
+    <div class="w3-half w3-margin-bottom">
+      <img src="/w3images/ocean2.jpg" alt="Norway" style="width:100%">
+      <div class="w3-container w3-white">
+        <h3>West Coast, Norway</h3>
+        <p class="w3-opacity">Roundtrip from $79</p>
+        <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+        <button class="w3-button w3-margin-bottom">Buy Tickets</button>
+      </div>
+    </div>
+    <div class="w3-half w3-margin-bottom">
+      <img src="/w3images/mountains2.jpg" alt="Austria" style="width:100%">
+      <div class="w3-container w3-white">
+        <h3>Mountains, Austria</h3>
+        <p class="w3-opacity">One-way from $39</p>
+        <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+        <button class="w3-button w3-margin-bottom">Buy Tickets</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="w3-container">
+    <div class="w3-panel w3-padding-16 w3-black w3-opacity w3-card-2 w3-hover-opacity-off">
+      <h2>Get the best offers first!</h2>
+      <p>Join our newsletter.</p>
+      <label>E-mail</label>
+      <input class="w3-input w3-border" type="text" placeholder="Your Email address">
+      <button type="button" class="w3-button w3-red w3-margin-top">Subscribe</button>
+    </div>
+  </div>
+  
+  <!-- Contact -->
+  <div class="w3-container">
+    <h2>Contact</h2>
+    <p>Let us book your next trip!</p>
+    <i class="fa fa-map-marker" style="width:30px"></i> Chicago, US<br>
+    <i class="fa fa-phone" style="width:30px"></i> Phone: +00 151515<br>
+    <i class="fa fa-envelope" style="width:30px"> </i> Email: mail@mail.com<br>
+    <form action="/action_page.php" target="_blank">
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="Name"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="Email"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Message" required name="Message"></p>
+      <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
+    </form>
+  </div>
+  
+<!-- End page content -->
+</div>
+
+
+
+<!-- Footer -->
+<footer class="w3-container w3-center w3-opacity w3-margin-bottom">
+  <h5>Find Us On</h5>
+  <div class="w3-xlarge w3-padding-16">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+  </div>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+</footer>
+
+<script>
+// Tabs
+function openLink(evt, linkName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("myLink");
+  for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+// Click on the first tablink on load
+document.getElementsByClassName("tablink")[0].click();
+</script>
+
+<script src = "js/home.js"></script>
+<script src = "js/map.js"></script>
+<script src = "js/firebaseAuth.js"></script>
+
+    <script async defer
+        src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBE_eM_zuZbK1AL_3_yBApX-o9bZClXmKc&callback=initMap'>
+    </script>
+
+<!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RestaurantGo || Find your Food Niche</title>
+    <link rel="icon" href="images/logo.png">
+    
+    <!-- Compiled and minified CSS -->
+    
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css'>
+    <!-- Compiled and minified JavaScript -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js'></script>
+
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 90%;
+        margin: 200;
+        padding: 10;
+      }
+    </style>
+    
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyD2MkC1sfePDl__0dvHQudZL2r42EmP9Dk",
+        authDomain: "food-project-ebea1.firebaseapp.com",
+        databaseURL: "https://food-project-ebea1.firebaseio.com",
+        projectId: "food-project-ebea1",
+        storageBucket: "food-project-ebea1.appspot.com",
+        messagingSenderId: "373070343577"
+      };
+      firebase.initializeApp(config);
+    </script>
+             
+  </head>
+  <body>
+    <div class="container">
+        <h1 id= "findAGrocery"><center>Find a Restaurant!</center></h1>
+   </div>
+   <br/>
+   
+    <div id='map'></div>
+    
+    
+
+   <div id = "chatwee-root"></div>
+    <script src = "js/map.js"></script>
+
+
+    <script async defer
+        src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBE_eM_zuZbK1AL_3_yBApX-o9bZClXmKc&callback=initMap'>
+    </script>
+
+   <script src="https://chatwee-api.com/v2/script/59808d9dbd616d930f60d922.js"></script>
+    
+
+ </body>
+
+</html>

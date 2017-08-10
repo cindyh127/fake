@@ -1,0 +1,40 @@
+body{
+    font-family: "Raleway", Arial, Helvetica, sans-serif;
+}
+
+.fa-user, .fa-cutlery, .fa-briefcase , .fa-envelope,   .fa-globe{
+    color: #F44336;
+}
+
+#footer, #spice-tolerance{
+    background-color: #F44336; 
+   
+}
+
+.bar{
+    background-color: #0275D8;
+}
+
+.heading, .fa-home, .fa-phone, .fa-asterisk{
+    color: #0275D8;
+}
+
+.subheading{
+    color: grey;
+}
+
+main{
+    color:#F44336;
+}
+
+#button {
+    background-color:#0275D8;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
